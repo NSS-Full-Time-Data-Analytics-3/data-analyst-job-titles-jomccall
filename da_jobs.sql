@@ -8,8 +8,8 @@ SELECT *
 FROM da_jobs
 LIMIT 10;
 
-/* #3. How many postings are in TN?
-How many in either TN or KY?*/
+/* #3. How many postings are in TN? 21
+How many in either TN or KY? 27*/
 SELECT COUNT(location) AS "TN_Postings"
 FROM da_jobs
 WHERE location = 'TN';
@@ -19,6 +19,11 @@ FROM da_jobs AS "TN_KY_Postings"
 WHERE location = 'TN'
 OR location = 'KY';
 
+-- OR
+SELECT COUNT(location)
+FROM da_jobs AS "TN_KY_Postings"
+WHERE location IN ('TN', 'KY');
+
 /* #4. How many postings in TN have a star rating above 4?*/
 SELECT COUNT(*) AS "TN_O4"
 FROM da_jobs
@@ -26,7 +31,7 @@ WHERE location = 'TN'
 AND star_rating >4;
 
 /* #5. How many postings have rev count btw 500 and 1000?*/
-SELECT COUNT(*) 
+SELECT COUNT(title) 
 FROM da_jobs
 WHERE review_count BETWEEN 500 AND 1000;
 
@@ -99,13 +104,12 @@ SELECT DISTINCT domain
 FROM da_jobs
 WHERE domain IS NOT NULL;
 
-SELECT DISTINCT domain, title, skill, ((AVG(days_since_posting))/7)/COUNT(title) AS weeks
+SELECT DISTINCT domain, title, skill, (AVG(days_since_posting)) AS weeks
 FROM da_jobs
 WHERE domain IS NOT NULL
 GROUP BY domain, title, skill
 HAVING skill LIKE '%SQL%'
-
-AND ((AVG(days_since_posting))/7) > 3
+AND (AVG(days_since_posting)) > 3
 ORDER BY weeks DESC;
 
 -- Aero+Def, Auto, Banks + FinServices
