@@ -65,16 +65,47 @@ GROUP BY company
 ORDER BY AVG(star_rating) DESC;
 
 /* #11. Find all job titles containing word "Analyst" how many different titles are there?*/
-SELECT DISTINCT(title)
+SELECT COUNT(DISTINCT title)
 FROM da_jobs
 WHERE title LIKE '%Analyst%';
 
 SELECT COUNT(DISTINCT title)
 FROM da_jobs
-WHERE title LIKE '%Analyst%';
+WHERE title LIKE '%Analytics';
+
+SELECT COUNT(DISTINCT title)
+FROM da_jobs
+WHERE title LIKE '%Analytics'
+AND title LIKE '%Analyst%';
 
 /* #12. How many job titles do not contain either the word "Analyst" or the word "Analytics"?
 What word do these positions have in common? */
-SELECT DISTINCT(title)
+SELECT DISTINCT title
 FROM da_jobs
-WHERE title NOT LIKE '%Analyst%' OR NOT LIKE '%Analytics%';
+WHERE title NOT LIKE '%Analyst%'
+AND title NOT LIKE '%Analytics%';
+-- these positions have analyst or analytics with varying degrees of capital letters
+-- in common.. it seems like all listing have either
+
+-- BONUS: Which jobs requiring SQL are hard to fill
+-- Find # of jobs by industry that require SQL and have been
+-- posted more than 3 weeks.
+
+SELECT *
+FROM da_jobs
+LIMIT 20;
+
+SELECT DISTINCT domain
+FROM da_jobs
+WHERE domain IS NOT NULL;
+
+SELECT DISTINCT domain, title, skill, ((AVG(days_since_posting))/7)/COUNT(title) AS weeks
+FROM da_jobs
+WHERE domain IS NOT NULL
+GROUP BY domain, title, skill
+HAVING skill LIKE '%SQL%'
+
+AND ((AVG(days_since_posting))/7) > 3
+ORDER BY weeks DESC;
+
+-- Aero+Def, Auto, Banks + FinServices
